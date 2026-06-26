@@ -15,25 +15,25 @@ TICKERS = [
 ]
 
 def download_prices(tickers=TICKERS, start='2018-01-01', end='2024-12-31'):
-  """
-  Download adjusted closing prices for all tickers.
-  Adjusted close accounts for dividends & stock splits - always use this, not raw close, for backtesting (common interview question)
-  """
-print (f"Downloading price data for {len(tickers)} tickers...")
+    """
+    Download adjusted closing prices for all tickers.
+    Adjusted close accounts for dividends & stock splits - always use this, not raw close, for backtesting (common interview question)
+    """
+    print(f"Downloading price data for {len(tickers)} tickers...")
 
-raw = yf.download(tickers, start=start, end=end, auto_adjust=True)
-prices = raw['Close']
+    raw = yf.download(tickers, start=start, end=end, auto_adjust=True)
+    prices = raw['Close']
 
-# Drop any ticker that has more than 20% missing data
+    # Drop any ticker that has more than 20% missing data
     threshold = 0.8
     prices = prices.dropna(thresh=int(len(prices) * threshold), axis=1)
-    
+
     # Forward-fill remaining gaps (e.g. holidays where some stocks didn't trade)
     prices = prices.ffill()
-    
+
     print(f"Downloaded {len(prices)} trading days of data.")
     print(f"Tickers available: {list(prices.columns)}")
-    
+
     return prices
 
 
